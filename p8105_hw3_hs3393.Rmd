@@ -164,7 +164,10 @@ The size of the dataset is `r nrow(ny_noaa)` rows * `r ncol(ny_noaa)`. The propo
 ```{r}
 datany <- ny_noaa %>% 
   separate(date, into = c("year", "month", "day"), sep = "-", remove = T) %>% 
-  mutate_at(c("tmax", "tmin"), as.numeric)
+  mutate_at(c("tmax", "tmin"), as.numeric) %>% 
+  mutate(tmax = tmax / 10,
+         tmin = tmin / 10,
+         prcp = prcp / 10)
 
 getmode <- function(v) {
    uniqv <- unique(v)
@@ -182,7 +185,7 @@ The most commonly observed value is 0, because for most of the time in a year, i
 data1_7 <- datany %>% 
   filter(month == "01" | month == "07") %>% 
   group_by(id, year ,month) %>% 
-  summarize(ave_max = mean(tmax/10))
+  summarize(ave_max = mean(tmax))
 
 data1_7 %>% 
   ggplot(aes(x = year, y = ave_max, color = month)) +
