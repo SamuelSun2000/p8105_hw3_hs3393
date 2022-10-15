@@ -19,9 +19,11 @@ library(p8105.datasets)
 library(patchwork)
 
 knitr::opts_chunk$set(
-  fig.width = 10,
-  fig.asp = .8,
-  out.width = "70%"
+	echo = TRUE,
+	warning = FALSE,
+	fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
 )
 
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
@@ -207,13 +209,13 @@ data1_7 %>%
 (To see the pattern clearer, I created another line plot for this problem) We can see that the variation of tmax in January is larger than that in July. There are highs and lows of the maximum temperature throughout history. The highest temperature in the summer and winter in the past 30 years does not change significantly. There are to some extend some outliers. Januaray have outliers higher and lower than normal, and for July, most of the outliers are lower than average. 
 
 
-```{r}
+```{r fig.height = 5}
 p_minmax = datany %>% 
   select(tmax, tmin) %>% 
   ggplot(aes(x = tmin, y = tmax)) +
   geom_hex() +
   scale_fill_viridis_c()+
-  guides(fill = guide_colourbar(barwidth = 12,       barheight = 0.7)) + 
+  guides(fill = guide_colourbar(barwidth = 10,   barheight = 0.7)) + 
   labs(title = "Tmax vs Tmin")
 
 p_snow = datany %>% 
@@ -226,8 +228,6 @@ p_snow = datany %>%
   scale_x_discrete(breaks = c("1981","1985", "1990", "1995", 
     "2000", "2005", "2010"))
   
-  
-
 p_merge = p_minmax + p_snow
 
 p_merge
