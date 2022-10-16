@@ -164,7 +164,7 @@ The size of the dataset is `r nrow(ny_noaa)` rows * `r ncol(ny_noaa)`. The propo
 ```{r}
 datany <- ny_noaa %>% 
   separate(date, into = c("year", "month", "day"), sep = "-", remove = T) %>% 
-  mutate_at(c("tmax", "tmin"), as.numeric) %>% 
+  mutate_at(c("year", "month", "day", "tmax", "tmin"), as.numeric) %>% 
   mutate(tmax = tmax / 10,
          tmin = tmin / 10,
          prcp = prcp / 10)
@@ -183,29 +183,28 @@ The most commonly observed value is 0, because for most of the time in a year, i
 ```{r}
 
 data1_7 <- datany %>% 
-  filter(month == "01" | month == "07") %>% 
+  filter(month == "1" | month == "7") %>% 
   group_by(id, year ,month) %>% 
   summarize(ave_max = mean(tmax))
 
 data1_7 %>% 
-  ggplot(aes(x = year, y = ave_max, color = month)) +
+  ggplot(aes(x = year, group = year, y = ave_max, color = as.factor(month))) +
   geom_boxplot() +
-  facet_grid(. ~ month) + 
+  facet_grid(. ~ as.factor(month)) + 
   labs(x = "Year",
        y = "Average maximum temperature (˚C)", 
-    title = "Average max temperature in Januaray and July") + 
-  scale_x_discrete(breaks = c("1985", "1990", "1995", 
-    "2000", "2005", "2010"))
+       title = "Average max temperature in Januaray and July",
+       color = "Month") 
 
 data1_7 %>% 
-  ggplot(aes(x = year, y = ave_max, group = id,color = month)) +
+  ggplot(aes(x = year, y = ave_max, group = id,color = as.factor(month))) +
   geom_line(alpha = .4) +
   facet_grid(. ~ month) + 
   labs(x = "Year",
        y = "Average maximum temperature (˚C)", 
-    title = "Average max temperature in Januaray and July") + 
-  scale_x_discrete(breaks = c("1985", "1990", "1995", 
-    "2000", "2005", "2010"))
+      title = "Average max temperature in Januaray and July",
+      color = "Month") +
+   guides(fill=guide_legend(title="Month"))
   
 ```
 
@@ -225,13 +224,11 @@ p_minmax = datany %>%
 
 p_snow = datany %>% 
   filter(snow > 0 & snow < 100) %>% 
-  ggplot(aes(x = year, y = snow)) +
+  ggplot(aes(x = year, y = snow, group = year)) +
   geom_boxplot() + 
   labs(x = "Year", 
        y = "Snow Fall (mm)",
-       title = "Snowfall in each year") +
-  scale_x_discrete(breaks = c("1981","1985", "1990", "1995", 
-    "2000", "2005", "2010"))
+       title = "Snowfall in each year") 
   
 p_merge = p_minmax + p_snow
 
