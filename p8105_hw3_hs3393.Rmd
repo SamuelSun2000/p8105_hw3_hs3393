@@ -192,7 +192,7 @@ data1_7 %>%
   geom_boxplot() +
   facet_grid(. ~ month) + 
   labs(x = "Year",
-       y = "Average maximum temperature", 
+       y = "Average maximum temperature (˚C)", 
     title = "Average max temperature in Januaray and July") + 
   scale_x_discrete(breaks = c("1985", "1990", "1995", 
     "2000", "2005", "2010"))
@@ -219,7 +219,9 @@ p_minmax = datany %>%
   geom_hex() +
   scale_fill_viridis_c()+
   guides(fill = guide_colourbar(barwidth = 10,   barheight = 0.7)) + 
-  labs(title = "Tmax vs Tmin")
+  labs(title = "Tmax vs Tmin",
+       xlab = "Max Temperature (˚C)",
+       ylab = "Min Temperature (˚C)")
 
 p_snow = datany %>% 
   filter(snow > 0 & snow < 100) %>% 
